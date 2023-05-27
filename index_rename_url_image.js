@@ -1,27 +1,36 @@
 import * as fs from 'fs';
 
-const normal_url = 'https://getschiffynft.mypinata.cloud/ipfs/QmQRB225XajJPN4fUpgnqKgY3y6VB2ErPrT1Cx2jMVBnFS/';
-const gold_url = 'https://getschiffynft.mypinata.cloud/ipfs/QmWJSc4qag7xEK5VnQNMPN1yv2ZQAUJU5PBk57pcNaWj5o/';
-const silver_url = 'https://getschiffynft.mypinata.cloud/ipfs/QmVPMbthXBp632CYuXn9uQ6UvrP7psw298jMoXgamff3fz/';
+const RESOURCES = './resources/';
+const NFT_NAME = 'Besa Gaming OG';
+const IPFS_IMAGES_ADDRESS =
+  'https://besagaming.mypinata.cloud/ipfs/QmYqYM59L9j5LdM88FhjdkuSfgJZABY9PSSBD2LUiEKhoR/';
+const ADDRESS_METADATA_FILES = RESOURCES + '/metadata';
 
-const address_metadata_files = './silver/metadata';
-replace_url_image(address_metadata_files, silver_url);
+// Execute
+replace_url_image(ADDRESS_METADATA_FILES, IPFS_IMAGES_ADDRESS, '.jpeg');
 
+// Functions
+function replace_url_image(address_files, url_address, fileType = '') {
+  const _files = fs.readdirSync(address_files);
 
-function replace_url_image(address_files, url_address)  
-{
-  var files = fs.readdirSync(address_files)
+  _files.forEach((file, index) => {
+    console.log('ABRIENDO ' + file + ' N°' + (index + 1));
 
-  files.forEach((file, index) =>
-  {
-    console.log("ABRIENDO " + file);
-    var rawdata = fs.readFileSync((address_files+'/'+file));
-    var jsonMetadata = JSON.parse(rawdata);
+    const rawData = fs.readFileSync(address_files + '/' + file);
+    const jsonMetadata = JSON.parse(rawData);
+    const fileName =
+      url_address + parseNft_name() + (index + 1) + fileType.toLowerCase();
 
-    jsonMetadata.image = (url_address+(parseInt(file))+'.png');
+    jsonMetadata.external_url = fileName;
+    jsonMetadata.image = fileName;
 
-    fs.writeFileSync((address_files+'/'+file), JSON.stringify(jsonMetadata));
+    fs.writeFileSync(address_files + '/' + file, JSON.stringify(jsonMetadata));
 
-    console.log('ESCRIBIENDO: '+ file +' - INDEX [ '+(index+1)+' ]');
+    console.log('ESCRIBIENDO: ' + file + ' - INDEX [ ' + (index + 1) + ' ]');
   });
+}
+
+// Convert NFT name to file_name
+function parseNft_name() {
+  return NFT_NAME.toLowerCase().replaceAll(' ', '_') + '_';
 }
