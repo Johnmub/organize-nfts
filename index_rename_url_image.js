@@ -3,7 +3,7 @@ import * as fs from 'fs';
 const RESOURCES = './resources/';
 const NFT_NAME = 'Besa Gaming OG';
 const IPFS_IMAGES_ADDRESS =
-  'https://besagaming.mypinata.cloud/ipfs/QmYqYM59L9j5LdM88FhjdkuSfgJZABY9PSSBD2LUiEKhoR/';
+  'https://besagaming.mypinata.cloud/ipfs/Qmep7AtZGTvUqvziSd1Fqq4kipPR6neRXZCDMBsppD8sH8/';
 const ADDRESS_METADATA_FILES = RESOURCES + '/metadata';
 
 // Execute
@@ -19,7 +19,10 @@ function replace_url_image(address_files, url_address, fileType = '') {
     const rawData = fs.readFileSync(address_files + '/' + file);
     const jsonMetadata = JSON.parse(rawData);
     const fileName =
-      url_address + parseNft_name() + (index + 1) + fileType.toLowerCase();
+      url_address +
+      parseNft_name() +
+      file.match(/\d/g).join('') +
+      fileType.toLowerCase();
 
     jsonMetadata.external_url = fileName;
     jsonMetadata.image = fileName;
